@@ -122,17 +122,6 @@ const widgetHTML = `
     #powered-by a:hover {
       text-decoration: underline;
     }
-
-    /* Additional refinement for field padding and button */
-    #chat-form input, #chat-form textarea {
-      padding: 10px 12px;
-    }
-
-    #chat-form button {
-      padding: 12px;
-      margin-top: 5px;
-    }
-
   </style>
 
   <!-- Chat bubble -->
@@ -207,5 +196,3 @@ document.getElementById('chat-form').addEventListener('submit', function (e) {
       submitButton.textContent = 'Send Message';
     });
 });
-
-
