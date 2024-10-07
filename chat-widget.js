@@ -14,7 +14,7 @@ const widgetHTML = `
     /* Widget container */
     #chat-form-container {
       position: fixed;
-      bottom: 100px;
+      bottom: 20px;
       right: 20px;
       width: 320px;
       background-color: white;
