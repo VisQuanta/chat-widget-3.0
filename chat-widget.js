@@ -11,8 +11,8 @@ const headerText = scriptTag.dataset.headerText || 'How Can We Help You?';
 const widgetHTML = `
   <style>
     /* Apply Helvetica to all elements */
-    body, input, textarea, button, div {
-      font-family: 'Helvetica', 'Arial', sans-serif;
+    body, input, textarea, button, div, p, h1, h2, h3, h4, h5, h6 {
+      font-family: 'Helvetica', 'Arial', sans-serif !important;
     }
 
     /* Chat Bubble */
