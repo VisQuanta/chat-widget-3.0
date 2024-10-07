@@ -1,33 +1,16 @@
-// Get the script tag that includes the data attributes
+// Access the script's custom attributes
 const scriptTag = document.currentScript;
 
-// Access each custom attribute from the data attributes
-const primaryColor = scriptTag.dataset.primaryColor || '#bb162b'; // Default color if none provided
+const primaryColor = scriptTag.dataset.primaryColor || '#bb162b';
 const secondaryColor = scriptTag.dataset.secondaryColor || '#ff4500';
 const clientName = scriptTag.dataset.clientName || 'Client';
 const identifier = scriptTag.dataset.identifier || 'default123';
 const headerText = scriptTag.dataset.headerText || 'How Can We Help You?';
 
-// Create the chat widget HTML
+// Inject the chat widget HTML and CSS into the page
 const widgetHTML = `
   <style>
-    /* Widget container */
-    #chat-form-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 320px;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      display: none;
-      z-index: 1000;
-      flex-direction: column;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-    }
-
-    /* Chat bubble */
+    /* Chat Bubble */
     #chat-bubble {
       position: fixed;
       bottom: 20px;
@@ -45,26 +28,38 @@ const widgetHTML = `
       font-weight: bold;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       z-index: 1000;
-      transition: transform 0.3s ease, background-color 0.3s ease;
     }
 
+    /* Hover Effect */
     #chat-bubble:hover {
       background-color: ${secondaryColor};
       transform: scale(1.1);
     }
 
-    /* Header with gradient style */
+    /* Chat Form */
+    #chat-form-container {
+      display: none;
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      width: 320px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      flex-direction: column;
+    }
+
     #chat-header {
-      background: ${primaryColor};
+      background-color: ${primaryColor};
       color: white;
-      font-size: 16px;
-      padding: 15px 12px;
+      padding: 15px;
       border-radius: 10px 10px 0 0;
       text-align: center;
       position: relative;
+      font-size: 16px;
     }
 
-    /* Close button */
     #close-chat {
       background: none;
       border: none;
@@ -72,27 +67,20 @@ const widgetHTML = `
       font-size: 20px;
       font-weight: bold;
       position: absolute;
-      top: 50%;
-      right: 15px;
-      transform: translateY(-50%);
+      top: 10px;
+      right: 10px;
       cursor: pointer;
     }
 
-    /* Speech bubble */
     #text-bubble {
-      background-color: #f2f4f7;
       padding: 15px;
-      margin: 15px;
-      border-radius: 15px;
       font-size: 14px;
-      color: #111828;
+      color: #111;
       text-align: center;
     }
 
-    /* Chat form */
     #chat-form {
       padding: 15px;
-      text-align: center;
     }
 
     #chat-form input, #chat-form textarea {
@@ -136,90 +124,75 @@ const widgetHTML = `
     }
   </style>
 
-  <div id="chat-bubble">
-    💬
-  </div>
+  <!-- Chat bubble -->
+  <div id="chat-bubble">💬</div>
+
+  <!-- Chat form -->
   <div id="chat-form-container">
     <div id="chat-header">
       ${headerText}
       <button id="close-chat">×</button>
     </div>
     <div id="text-bubble">
-      Enter your info below and any information regarding your vehicle choice and a representative will be right with you.
+      Chat with ${clientName}, a representative will be with you shortly.
     </div>
     <form id="chat-form">
       <input type="text" id="name" name="name" placeholder="Your Name" required>
       <input type="email" id="email" name="email" placeholder="Your Email" required>
-      <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" required pattern="^\\+?[1-9]\\d{1,14}$" title="Please enter a valid phone number.">
-      <input type="hidden" id="identifier" name="identifier" value="${identifier}">
-      <textarea id="message" name="message" placeholder="Your Message or Vehicle Choice" required style="height: 100px;"></textarea>
-      <button type="submit">Send Message 👉🏼</button>
-      <div id="form-footer">
-        By submitting, you agree to receive SMS or emails. Rates may apply.
-      </div>
+      <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" required>
+      <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
     </form>
-    <div id="confirmation-bubble" style="display: none;">
-      Thanks for your enquiry. A representative will be in touch soon. 🏎️
-    </div>
-    <div id="powered-by">
-      Powered by <a href="https://visquanta.com/speed-to-lead" target="_blank">${clientName}</a>
-    </div>
+    <div id="powered-by">Powered by <a href="https://visquanta.com" target="_blank">${clientName}</a></div>
   </div>
 `;
 
 // Inject the widget HTML into the body of the page
 document.body.insertAdjacentHTML('beforeend', widgetHTML);
 
-// Toggle chat form when the bubble is clicked
-document.getElementById('chat-bubble').addEventListener('click', function() {
+// Toggle chat form visibility
+document.getElementById('chat-bubble').addEventListener('click', function () {
   const formContainer = document.getElementById('chat-form-container');
-  formContainer.style.display = formContainer.style.display === 'flex' ? 'none' : 'flex';
-  formContainer.style.flexDirection = 'column';  // Ensures column layout when form opens
+  formContainer.style.display = formContainer.style.display === 'none' ? 'flex' : 'none';
 });
 
-// Close chat form when the close button is clicked
-document.getElementById('close-chat').addEventListener('click', function() {
+// Close chat form
+document.getElementById('close-chat').addEventListener('click', function () {
   document.getElementById('chat-form-container').style.display = 'none';
 });
 
 // Handle form submission
-document.getElementById('chat-form').addEventListener('submit', function(e) {
+document.getElementById('chat-form').addEventListener('submit', function (e) {
   e.preventDefault();
-
-  const submitButton = this.querySelector('button[type="submit"]');
+  const submitButton = this.querySelector('button');
   submitButton.disabled = true;
   submitButton.textContent = 'Sending...';
 
+  // Collect form data
   const formData = {
-    name: document.getElementById('name').value.trim(),
-    email: document.getElementById('email').value.trim(),
-    phone: document.getElementById('phone').value.trim(),
-    message: document.getElementById('message').value.trim(),
-    identifier: document.getElementById('identifier').value
+    name: document.getElementById('name').value,
+    email: document.getElementById('email').value,
+    phone: document.getElementById('phone').value,
+    message: document.getElementById('message').value,
+    identifier: identifier
   };
 
-  // Send the POST request (example URL)
+  // Send the POST request (example)
   fetch('https://api.visquanta.com/webhook/chat-widget', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(formData),
   })
-  .then(response => {
-    if (!response.ok) throw new Error('Server error');
-    return response.json();
-  })
-  .then(() => {
-    document.getElementById('chat-form').style.display = 'none';
-    document.getElementById('text-bubble').style.display = 'none';
-    document.getElementById('confirmation-bubble').style.display = 'block';
-    document.getElementById('chat-header').textContent = "All Done! 🏆";
-  })
-  .catch(() => {
-    submitButton.disabled = false;
-    submitButton.textContent = 'Send Message 👉🏼';
-    document.getElementById('confirmation-bubble').style.display = 'block';
-    document.getElementById('confirmation-bubble').textContent = 'There was an error submitting the form. Please try again later.';
-  });
+    .then((response) => {
+      if (!response.ok) throw new Error('Server error');
+      return response.json();
+    })
+    .then(() => {
+      submitButton.textContent = 'Message Sent!';
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      submitButton.disabled = false;
+      submitButton.textContent = 'Send Message';
+    });
 });
