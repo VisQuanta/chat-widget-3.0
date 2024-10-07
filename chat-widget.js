@@ -10,23 +10,148 @@ const headerText = scriptTag.dataset.headerText || 'Chat with us!';
 
 // Create the chat widget HTML
 const widgetHTML = `
-  <div id="chat-bubble" style="background-color: ${primaryColor};">
+  <style>
+    /* Widget container */
+    #chat-form-container {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      width: 300px;
+      max-width: 300px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      display: none;
+      z-index: 1000;
+    }
+
+    /* Chat bubble */
+    #chat-bubble {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: ${primaryColor};
+      color: white;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 30px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    #chat-bubble:hover {
+      background-color: ${secondaryColor};
+      transform: scale(1.1);
+    }
+
+    /* Header with gradient style */
+    #chat-header {
+      background: ${primaryColor};
+      color: white;
+      font-size: 16px;
+      padding: 15px 10px;
+      border-radius: 10px 10px 0 0;
+      text-align: center;
+      position: relative;
+    }
+
+    /* Close button */
+    #close-chat {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+
+    /* Speech bubble and form */
+    #text-bubble {
+      background-color: #f2f4f7;
+      padding: 15px;
+      margin: 15px;
+      border-radius: 0 15px 15px 15px;
+      font-size: 14px;
+      color: #111828;
+    }
+
+    #chat-form {
+      padding: 15px;
+      text-align: center;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #chat-form input, #chat-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 12px;
+    }
+
+    #chat-form button {
+      width: 100%;
+      padding: 10px;
+      background-color: ${primaryColor};
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    #chat-form button:hover {
+      background-color: ${secondaryColor};
+    }
+
+    #powered-by {
+      font-size: 10px;
+      text-align: center;
+      padding: 8px;
+      color: #555;
+    }
+
+    #powered-by a {
+      color: #001D6E;
+      text-decoration: none;
+    }
+
+    #powered-by a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+  <div id="chat-bubble">
     💬
   </div>
-  <div id="chat-form-container" style="display: none;">
-    <div id="chat-header" style="background: ${primaryColor};">
+  <div id="chat-form-container">
+    <div id="chat-header">
       ${headerText}
       <button id="close-chat">×</button>
     </div>
     <div id="text-bubble">
-      Enter your info below and a representative will be right with you.
+      Chat with ${clientName} by entering your info below, and a representative will be right with you.
     </div>
     <form id="chat-form">
       <input type="text" id="name" name="name" placeholder="Your Name" required>
       <input type="email" id="email" name="email" placeholder="Your Email" required>
-      <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" required pattern="^\\+?[1-9]\\d{1,14}$" title="Please enter a valid phone number.">
+      <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" required>
       <input type="hidden" id="identifier" name="identifier" value="${identifier}">
-      <textarea id="message" name="message" placeholder="Your Message" required style="height: 100px;"></textarea>
+      <textarea id="message" name="message" placeholder="Your Message" required></textarea>
       <button type="submit">Send Message 👉🏼</button>
       <div id="form-footer">
         By submitting, you agree to receive SMS or emails. Rates may apply.
@@ -43,14 +168,6 @@ const widgetHTML = `
 
 // Inject the widget HTML into the body of the page
 document.body.insertAdjacentHTML('beforeend', widgetHTML);
-
-// Apply the secondary color on hover
-document.getElementById('chat-bubble').addEventListener('mouseover', function() {
-  this.style.backgroundColor = secondaryColor;
-});
-document.getElementById('chat-bubble').addEventListener('mouseout', function() {
-  this.style.backgroundColor = primaryColor;
-});
 
 // Toggle chat form when the bubble is clicked
 document.getElementById('chat-bubble').addEventListener('click', function() {
@@ -75,7 +192,6 @@ document.getElementById('chat-form').addEventListener('submit', function(e) {
   submitButton.disabled = true;
   submitButton.textContent = 'Sending...';
 
-  // Collect form data
   const formData = {
     name: document.getElementById('name').value.trim(),
     email: document.getElementById('email').value.trim(),
