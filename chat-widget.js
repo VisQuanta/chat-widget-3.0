@@ -10,11 +10,11 @@ const headerText = scriptTag.dataset.headerText || 'Chat with us!';
 
 // Create the chat widget HTML
 const widgetHTML = `
-  <div id="chat-bubble">
+  <div id="chat-bubble" style="background-color: ${primaryColor};">
     💬
   </div>
   <div id="chat-form-container" style="display: none;">
-    <div id="chat-header">
+    <div id="chat-header" style="background: ${primaryColor};">
       ${headerText}
       <button id="close-chat">×</button>
     </div>
@@ -44,10 +44,7 @@ const widgetHTML = `
 // Inject the widget HTML into the body of the page
 document.body.insertAdjacentHTML('beforeend', widgetHTML);
 
-// Apply the primary color to the chat bubble background
-document.getElementById('chat-bubble').style.backgroundColor = primaryColor;
-
-// Apply the secondary color to the hover effect
+// Apply the secondary color on hover
 document.getElementById('chat-bubble').addEventListener('mouseover', function() {
   this.style.backgroundColor = secondaryColor;
 });
