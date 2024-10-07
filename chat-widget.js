@@ -2,11 +2,11 @@
 const scriptTag = document.currentScript;
 
 // Access each custom attribute from the data attributes
-const primaryColor = scriptTag.dataset.primaryColor || '#1e90ff'; // Default color if none provided
+const primaryColor = scriptTag.dataset.primaryColor || '#bb162b'; // Default color if none provided
 const secondaryColor = scriptTag.dataset.secondaryColor || '#ff4500';
 const clientName = scriptTag.dataset.clientName || 'Client';
 const identifier = scriptTag.dataset.identifier || 'default123';
-const headerText = scriptTag.dataset.headerText || 'Chat with us!';
+const headerText = scriptTag.dataset.headerText || 'How Can We Help You?';
 
 // Create the chat widget HTML
 const widgetHTML = `
@@ -16,13 +16,15 @@ const widgetHTML = `
       position: fixed;
       bottom: 100px;
       right: 20px;
-      width: 300px;
-      max-width: 300px;
+      width: 320px;
       background-color: white;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       display: none;
       z-index: 1000;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
     }
 
     /* Chat bubble */
@@ -56,7 +58,7 @@ const widgetHTML = `
       background: ${primaryColor};
       color: white;
       font-size: 16px;
-      padding: 15px 10px;
+      padding: 15px 12px;
       border-radius: 10px 10px 0 0;
       text-align: center;
       position: relative;
@@ -76,22 +78,21 @@ const widgetHTML = `
       cursor: pointer;
     }
 
-    /* Speech bubble and form */
+    /* Speech bubble */
     #text-bubble {
       background-color: #f2f4f7;
       padding: 15px;
       margin: 15px;
-      border-radius: 0 15px 15px 15px;
+      border-radius: 15px;
       font-size: 14px;
       color: #111828;
+      text-align: center;
     }
 
+    /* Chat form */
     #chat-form {
       padding: 15px;
       text-align: center;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
     }
 
     #chat-form input, #chat-form textarea {
@@ -100,7 +101,7 @@ const widgetHTML = `
       margin-bottom: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
-      font-size: 12px;
+      font-size: 14px;
     }
 
     #chat-form button {
@@ -111,7 +112,7 @@ const widgetHTML = `
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px;
     }
 
     #chat-form button:hover {
@@ -126,7 +127,7 @@ const widgetHTML = `
     }
 
     #powered-by a {
-      color: #001D6E;
+      color: ${primaryColor};
       text-decoration: none;
     }
 
@@ -144,14 +145,14 @@ const widgetHTML = `
       <button id="close-chat">×</button>
     </div>
     <div id="text-bubble">
-      Chat with ${clientName} by entering your info below, and a representative will be right with you.
+      Enter your info below and any information regarding your vehicle choice and a representative will be right with you.
     </div>
     <form id="chat-form">
       <input type="text" id="name" name="name" placeholder="Your Name" required>
       <input type="email" id="email" name="email" placeholder="Your Email" required>
-      <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" required>
+      <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" required pattern="^\\+?[1-9]\\d{1,14}$" title="Please enter a valid phone number.">
       <input type="hidden" id="identifier" name="identifier" value="${identifier}">
-      <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+      <textarea id="message" name="message" placeholder="Your Message or Vehicle Choice" required style="height: 100px;"></textarea>
       <button type="submit">Send Message 👉🏼</button>
       <div id="form-footer">
         By submitting, you agree to receive SMS or emails. Rates may apply.
@@ -172,11 +173,8 @@ document.body.insertAdjacentHTML('beforeend', widgetHTML);
 // Toggle chat form when the bubble is clicked
 document.getElementById('chat-bubble').addEventListener('click', function() {
   const formContainer = document.getElementById('chat-form-container');
-  if (formContainer.style.display === 'flex') {
-    formContainer.style.display = 'none';
-  } else {
-    formContainer.style.display = 'flex';
-  }
+  formContainer.style.display = formContainer.style.display === 'flex' ? 'none' : 'flex';
+  formContainer.style.flexDirection = 'column';  // Ensures column layout when form opens
 });
 
 // Close chat form when the close button is clicked
