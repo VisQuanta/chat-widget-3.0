@@ -10,6 +10,11 @@ const headerText = scriptTag.dataset.headerText || 'How Can We Help You?';
 // Inject the chat widget HTML and CSS into the page
 const widgetHTML = `
   <style>
+    /* Apply Helvetica to all elements */
+    body, input, textarea, button, div {
+      font-family: 'Helvetica', 'Arial', sans-serif;
+    }
+
     /* Chat Bubble */
     #chat-bubble {
       position: fixed;
