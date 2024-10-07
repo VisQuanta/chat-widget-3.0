@@ -130,6 +130,50 @@ const widgetHTML = `
     #powered-by a:hover {
       text-decoration: underline;
     }
+
+    /* New styles for the updated design */
+    #chat-form-container {
+      border-radius: 0;
+    }
+
+    #chat-header {
+      border-radius: 0;
+    }
+
+    #text-bubble {
+      background-color: #f0f0f0;
+      border-radius: 5px;
+      margin: 10px;
+      padding: 10px;
+    }
+
+    #chat-form input, #chat-form textarea {
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+    }
+
+    #chat-form button {
+      border-radius: 3px;
+    }
+
+    #sms-consent {
+      font-size: 10px;
+      text-align: center;
+      padding: 5px 10px;
+      color: #555;
+    }
+
+    #success-message {
+      display: none;
+      padding: 20px;
+      text-align: center;
+      color: #333;
+    }
+
+    #success-message h2 {
+      color: ${primaryColor};
+      margin-bottom: 10px;
+    }
   </style>
 
   <!-- Chat bubble -->
@@ -142,16 +186,21 @@ const widgetHTML = `
       <button id="close-chat">×</button>
     </div>
     <div id="text-bubble">
-      Chat with ${clientName}, a representative will be with you shortly.
+      Enter your info below and any information regarding your vehicle choice and a representative will be right with you.
     </div>
     <form id="chat-form">
       <input type="text" id="name" name="name" placeholder="Your Name" required>
       <input type="email" id="email" name="email" placeholder="Your Email" required>
       <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" required>
-      <textarea id="message" name="message" placeholder="Your Message" required></textarea>
-      <button type="submit">Send Message</button>
+      <textarea id="message" name="message" placeholder="Your Message or Vehicle Choice" required></textarea>
+      <button type="submit">Send Message 👍</button>
     </form>
-    <div id="powered-by">Powered by <a href="https://visquanta.com" target="_blank">${clientName}</a></div>
+    <div id="sms-consent">By submitting, you agree to receive SMS or emails. Rates may apply.</div>
+    <div id="powered-by">Powered by <a href="https://visquanta.com" target="_blank">VisQuanta</a></div>
+    <div id="success-message">
+      <h2>All Done! 🎉</h2>
+      <p>Thanks for your enquiry. One of our authorized representatives will be in touch any minute now. 🚗</p>
+    </div>
   </div>
 `;
 
@@ -196,11 +245,14 @@ document.getElementById('chat-form').addEventListener('submit', function (e) {
       return response.json();
     })
     .then(() => {
-      submitButton.textContent = 'Message Sent!';
+      document.getElementById('chat-form').style.display = 'none';
+      document.getElementById('text-bubble').style.display = 'none';
+      document.getElementById('sms-consent').style.display = 'none';
+      document.getElementById('success-message').style.display = 'block';
     })
     .catch((error) => {
       console.error('Error:', error);
       submitButton.disabled = false;
-      submitButton.textContent = 'Send Message';
+      submitButton.textContent = 'Send Message 👍';
     });
 });
