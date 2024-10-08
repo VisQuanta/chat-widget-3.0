@@ -1,4 +1,4 @@
-// Get the script element and its attributes
+// Get script element and its attributes
 const scriptElement = document.currentScript;
 const primaryColor = scriptElement.getAttribute('data-primary-color') || '#bb162b';
 const secondaryColor = scriptElement.getAttribute('data-secondary-color') || '#d24c60';
@@ -40,17 +40,104 @@ document.body.insertAdjacentHTML('beforeend', widgetHTML);
 // Apply dynamic styles for colors
 const style = document.createElement('style');
 style.textContent = `
+  body, input, textarea, button {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+  }
   #chat-bubble {
     background-color: ${primaryColor};
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+    font-size: 30px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, background-color 0.3s ease;
   }
   #chat-bubble:hover {
     background-color: ${secondaryColor};
+    transform: scale(1.1);
+  }
+  #chat-form-container {
+    display: none;
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 300px;
+    height: 600px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    flex-direction: column;
+    overflow: hidden;
   }
   #chat-header {
     background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});
+    color: white;
+    font-size: 16px;
+    padding: 17px 12px;
+    border-radius: 10px 10px 0 0;
+    text-align: center;
+    position: relative;
+  }
+  #close-chat {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  #text-bubble {
+    background-color: #f2f4f7;
+    padding: 15px;
+    margin: 15px 20px;
+    border-radius: 0 2rem 2rem 2rem;
+    font-size: 14px;
+    color: #111828;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  #chat-form {
+    border: 2px solid;
+    border-image: linear-gradient(to right, ${primaryColor}, ${secondaryColor}) 1;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+  }
+  #chat-form input, #chat-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 12px;
   }
   #chat-form button {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
     background-color: ${primaryColor};
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
   }
   #chat-form button:hover {
     background-color: ${secondaryColor};
@@ -69,11 +156,7 @@ const chatHeader = document.getElementById('chat-header');
 
 // Toggle chat form when bubble is clicked
 chatBubble.addEventListener('click', () => {
-  if (chatFormContainer.style.display === 'flex') {
-    chatFormContainer.style.display = 'none';
-  } else {
-    chatFormContainer.style.display = 'flex';
-  }
+  chatFormContainer.style.display = (chatFormContainer.style.display === 'flex') ? 'none' : 'flex';
 });
 
 // Close chat form when close button is clicked
@@ -84,7 +167,6 @@ closeChat.addEventListener('click', () => {
 // Handle form submission
 chatForm.addEventListener('submit', function (e) {
   e.preventDefault();
-
   const submitButton = chatForm.querySelector('button[type="submit"]');
   submitButton.disabled = true;
   submitButton.textContent = 'Sending...';
@@ -99,27 +181,26 @@ chatForm.addEventListener('submit', function (e) {
 
   fetch('https://api.visquanta.com/webhook/chat-widget', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(formData),
   })
-    .then(response => {
-      if (!response.ok) throw new Error('Server error');
-      return response.json();
-    })
-    .then(() => {
-      chatForm.reset();
-      chatForm.style.display = 'none';
-      textBubble.style.display = 'none';
-      confirmationBubble.style.display = 'block';
-      chatHeader.textContent = 'All Done! 🏆';
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      submitButton.disabled = false;
-      submitButton.textContent = 'Send Message 👉🏼';
-      confirmationBubble.style.display = 'block';
-      confirmationBubble.textContent = 'There was an error submitting the form. Please try again later.';
-    });
+  .then(response => {
+    if (!response.ok) throw new Error('Server error');
+    return response.json();
+  })
+  .then(() => {
+    chatForm.reset();
+    chatForm.style.display = 'none';
+    textBubble.style.display = 'none';
+    confirmationBubble.style.display = 'block';
+    chatHeader.textContent = 'All Done! 🏆';
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+    submitButton.disabled = false;
+    submitButton.textContent = 'Send Message 👉🏼';
+    confirmationBubble.style.display = 'block';
+    confirmationBubble.textContent = 'There was an error submitting the form. Please try again later.';
+  });
 });
+
