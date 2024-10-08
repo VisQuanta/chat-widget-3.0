@@ -10,7 +10,7 @@ const widgetHTML = `
   <div id="chat-bubble">💬</div>
   <div id="chat-form-container">
     <div id="chat-header">How Can We Help You?<button id="close-chat">×</button></div>
-    <div id="text-bubble">
+    <div id="text-bubble" style="background-color:#f2f4f7; border-radius: 1rem; padding: 10px;">
       Enter your info below and any information regarding your vehicle choice and a representative will be right with you.
     </div>
     <form id="chat-form">
@@ -19,7 +19,7 @@ const widgetHTML = `
       <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" required>
       <input type="hidden" id="identifier" name="identifier" value="${identifier}">
       <textarea id="message" name="message" placeholder="Your Message or Vehicle Choice" required style="height: 100px;"></textarea>
-      <button type="submit">Send Message 👉🏼</button>
+      <button type="submit">Send Message 👍🏼</button>
       <div id="form-footer">
         By submitting, you agree to receive SMS or emails. Rates may apply.
       </div>
@@ -36,7 +36,7 @@ const widgetHTML = `
 // Inject the widget into the document
 document.body.insertAdjacentHTML('beforeend', widgetHTML);
 
-// Apply dynamic styles for colors
+// Apply dynamic styles for colors and form alignment
 const style = document.createElement('style');
 style.textContent = `
   body, input, textarea, button {
@@ -70,18 +70,18 @@ style.textContent = `
     bottom: 100px;
     right: 20px;
     width: 300px;
-    height: 600px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     flex-direction: column;
     overflow: hidden;
+    padding: 15px;
   }
   #chat-header {
-    background: linear-gradient(to right, ${primaryColor}, ${secondaryColor});
+    background: ${primaryColor};
     color: white;
     font-size: 16px;
-    padding: 17px 12px;
+    padding: 10px;
     border-radius: 10px 10px 0 0;
     text-align: center;
     position: relative;
@@ -100,20 +100,18 @@ style.textContent = `
   }
   #text-bubble {
     background-color: #f2f4f7;
-    padding: 15px;
-    margin: 15px 20px;
-    border-radius: 0 2rem 2rem 2rem;
+    padding: 10px;
+    margin: 15px 0;
+    border-radius: 1rem;
     font-size: 14px;
     color: #111828;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
   }
   #chat-form {
-    border: 2px solid;
-    border-image: linear-gradient(to right, ${primaryColor}, ${secondaryColor}) 1;
-    padding: 15px;
-    border-radius: 8px;
-    margin: 15px;
-    text-align: center;
+    border: 2px solid ${primaryColor};
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -121,16 +119,16 @@ style.textContent = `
   }
   #chat-form input, #chat-form textarea {
     width: 100%;
-    padding: 8px;
-    margin: 8px 0;
+    padding: 10px;
+    margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 8px;
-    font-size: 12px;
+    font-size: 14px;
   }
   #chat-form button {
     width: 100%;
-    padding: 8px;
-    margin: 8px 0;
+    padding: 10px;
+    margin: 10px 0;
     background-color: ${primaryColor};
     color: white;
     border: none;
@@ -151,11 +149,10 @@ const closeChat = document.getElementById('close-chat');
 const chatForm = document.getElementById('chat-form');
 const textBubble = document.getElementById('text-bubble');
 const confirmationBubble = document.getElementById('confirmation-bubble');
-const chatHeader = document.getElementById('chat-header');
 
 // Toggle chat form when bubble is clicked
 chatBubble.addEventListener('click', () => {
-  chatFormContainer.style.display = (chatFormContainer.style.display === 'flex') ? 'none' : 'flex';
+  chatFormContainer.style.display = (chatFormContainer.style.display === 'flex') ? 'none' : 'block';
 });
 
 // Close chat form when close button is clicked
@@ -197,8 +194,9 @@ chatForm.addEventListener('submit', function (e) {
   .catch((error) => {
     console.error('Error:', error);
     submitButton.disabled = false;
-    submitButton.textContent = 'Send Message 👉🏼';
+    submitButton.textContent = 'Send Message 👍🏼';
     confirmationBubble.style.display = 'block';
     confirmationBubble.textContent = 'There was an error submitting the form. Please try again later.';
   });
 });
+
