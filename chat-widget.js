@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Getting references to all necessary DOM elements
   const chatBubble = document.getElementById('chat-bubble');
   const chatFormContainer = document.getElementById('chat-form-container');
   const closeChat = document.getElementById('close-chat');
@@ -7,16 +8,19 @@ document.addEventListener("DOMContentLoaded", function () {
   const confirmationBubble = document.getElementById('confirmation-bubble');
   const chatHeader = document.getElementById('chat-header');
 
-  // Toggle chat form when bubble is clicked
-  chatBubble.addEventListener('click', () => {
+  // Function to toggle the visibility of the chat form
+  const toggleChatForm = () => {
     if (chatFormContainer.style.display === 'flex') {
       chatFormContainer.style.display = 'none';
     } else {
       chatFormContainer.style.display = 'flex';
     }
-  });
+  };
 
-  // Close chat form when close button is clicked
+  // Show/hide chat form when the chat bubble is clicked
+  chatBubble.addEventListener('click', toggleChatForm);
+
+  // Hide chat form when the close button is clicked
   closeChat.addEventListener('click', () => {
     chatFormContainer.style.display = 'none';
   });
@@ -39,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
       identifier: document.getElementById('identifier').value
     };
 
-    // Send the POST request without authorization
+    // Send the POST request
     fetch('https://api.visquanta.com/webhook/chat-widget', {
       method: 'POST',
       headers: {
@@ -53,26 +57,22 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       return response.json();
     })
-    .then(data => {
-      // Reset the form
+    .then(() => {
+      // Reset the form and update UI
       chatForm.reset();
-      // Hide form and text bubble
       chatForm.style.display = 'none';
       textBubble.style.display = 'none';
-      // Show the confirmation bubble
       confirmationBubble.style.display = 'block';
-      // Change the header text
       chatHeader.textContent = "All Done! 🏆";
     })
     .catch((error) => {
       console.error('Error:', error);
-      // Re-enable the submit button and reset its text
       submitButton.disabled = false;
       submitButton.textContent = 'Send Message 👉🏼';
-      // Display error message within the widget
       confirmationBubble.style.display = 'block';
       confirmationBubble.textContent = 'There was an error submitting the form. Please try again later.';
     });
   });
 });
+
 
