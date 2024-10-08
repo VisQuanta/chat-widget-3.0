@@ -37,7 +37,7 @@ const widgetHTML = `
 // Inject the widget into the document
 document.body.insertAdjacentHTML('beforeend', widgetHTML);
 
-// Apply dynamic styles for colors
+// Apply dynamic styles for colors and form alignment
 const style = document.createElement('style');
 style.textContent = `
   body, input, textarea, button {
@@ -69,7 +69,8 @@ style.textContent = `
     display: none;
     position: fixed;
     bottom: 100px;
-    right: 20px;
+    right: 50%;
+    transform: translateX(50%);
     width: 300px;
     height: 600px;
     background-color: white;
@@ -109,16 +110,16 @@ style.textContent = `
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   #chat-form {
-    border: 2px solid;
-    border-image: linear-gradient(to right, ${primaryColor}, ${secondaryColor}) 1;
-    padding: 15px;
-    border-radius: 8px;
-    margin: 15px;
+    border: 2px solid #ccc; /* Add border around the form */
+    border-radius: 10px;     /* Slightly round the edges */
+    padding: 20px;
+    margin: 20px auto;       /* Center the form horizontally */
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    overflow-y: auto;
+    max-width: 280px;        /* Optional: Limit the width of the form */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Add box-shadow for depth */
   }
   #chat-form input, #chat-form textarea {
     width: 100%;
