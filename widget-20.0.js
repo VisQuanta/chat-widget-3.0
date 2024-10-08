@@ -1,3 +1,4 @@
+
 (function () {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initWidget);
@@ -24,7 +25,13 @@
     const primaryColor = scriptTag.getAttribute('data-primary-color') || '#bb162b';
     const secondaryColor = scriptTag.getAttribute('data-secondary-color') || '#d24c60';
     const clientName = scriptTag.getAttribute('data-client-name') || 'Your Company';
-    const identifier = scriptTag.getAttribute('data-identifier') || 'default123';
+    const identifier = scriptTag.getAttribute('data-identifier');
+
+    // Ensure identifier is provided
+    if (!identifier) {
+      console.error('Chat widget identifier is required and missing.');
+      return;
+    }
 
     const chatBubble = document.createElement('div');
     chatBubble.id = 'chat-bubble';
