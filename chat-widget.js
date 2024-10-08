@@ -1,203 +1,56 @@
-// Get script element and attributes
-const scriptElement = document.currentScript;
-const primaryColor = scriptElement.getAttribute('data-primary-color') || '#bb162b';
-const secondaryColor = scriptElement.getAttribute('data-secondary-color') || '#d24c60';
-const clientName = scriptElement.getAttribute('data-client-name') || 'Company Name';
-const identifier = scriptElement.getAttribute('data-identifier') || 'defaultIdentifier';
+const scriptTag = document.currentScript;
+const primaryColor = scriptTag.dataset.primaryColor || '#bb162b';
+const secondaryColor = scriptTag.dataset.secondaryColor || '#ff4500';
+const clientName = scriptTag.dataset.clientName || 'Client';
 
-// Inject the chat widget HTML into the page
 const widgetHTML = `
+  <style>
+    #chat-bubble { position: fixed; bottom: 20px; right: 20px; background-color: ${primaryColor}; color: white; border-radius: 50%; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 30px; font-weight: bold; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); z-index: 1000; }
+    #chat-bubble:hover { background-color: ${secondaryColor}; transform: scale(1.1); }
+    #chat-form-container { display: none; position: fixed; bottom: 100px; right: 20px; width: 350px; background-color: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); z-index: 1000; }
+    #chat-header { background-color: ${primaryColor}; color: white; padding: 15px; border-radius: 10px 10px 0 0; text-align: center; position: relative; font-size: 16px; }
+    #close-chat { background: none; border: none; color: white; font-size: 20px; font-weight: bold; position: absolute; top: 10px; right: 10px; cursor: pointer; }
+    #chat-form { padding: 15px; }
+    #chat-form input, #chat-form textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+    #chat-form button { width: 100%; padding: 10px; background-color: ${primaryColor}; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    #chat-form button:hover { background-color: ${secondaryColor}; }
+    #powered-by { font-size: 10px; text-align: center; padding: 8px; color: #555; }
+    #powered-by a { color: ${primaryColor}; text-decoration: none; }
+    #powered-by a:hover { text-decoration: underline; }
+  </style>
+
+  <!-- Chat bubble -->
   <div id="chat-bubble">💬</div>
+
+  <!-- Chat form -->
   <div id="chat-form-container">
-    <div id="chat-header">How Can We Help You?<button id="close-chat">×</button></div>
-    <div id="text-bubble" style="background-color:#f2f4f7; border-radius: 1rem; padding: 10px;">
-      Enter your info below and any information regarding your vehicle choice and a representative will be right with you.
+    <div id="chat-header">
+      Chat with ${clientName}
+      <button id="close-chat">×</button>
+    </div>
+    <div id="text-bubble">
+      Chat with ${clientName}, a representative will be with you shortly.
     </div>
     <form id="chat-form">
       <input type="text" id="name" name="name" placeholder="Your Name" required>
       <input type="email" id="email" name="email" placeholder="Your Email" required>
       <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" required>
-      <input type="hidden" id="identifier" name="identifier" value="${identifier}">
-      <textarea id="message" name="message" placeholder="Your Message or Vehicle Choice" required style="height: 100px;"></textarea>
-      <button type="submit">Send Message 👍🏼</button>
-      <div id="form-footer">
-        By submitting, you agree to receive SMS or emails. Rates may apply.
-      </div>
+      <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
     </form>
-    <div id="confirmation-bubble" style="display:none;">
-      Thanks for your enquiry. One of our authorized representatives will be in touch any minute now. 🏎️
-    </div>
-    <div id="powered-by">
-      Powered by <a href="https://visquanta.com/speed-to-lead" target="_blank">${clientName}</a>
-    </div>
+    <div id="powered-by">Powered by <a href="https://visquanta.com" target="_blank">${clientName}</a></div>
   </div>
 `;
 
-// Inject the widget into the document
 document.body.insertAdjacentHTML('beforeend', widgetHTML);
 
-// Apply dynamic styles for colors and form alignment
-const style = document.createElement('style');
-style.textContent = `
-  body, input, textarea, button {
-    font-family: 'Helvetica', 'Arial', sans-serif;
-  }
-  #chat-bubble {
-    background-color: ${primaryColor};
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    cursor: pointer;
-    font-size: 30px;
-    font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, background-color 0.3s ease;
-  }
-  #chat-bubble:hover {
-    background-color: ${secondaryColor};
-    transform: scale(1.1);
-  }
-  #chat-form-container {
-    display: none;
-    position: fixed;
-    bottom: 100px;
-    right: 20px;
-    width: 300px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    flex-direction: column;
-    overflow: hidden;
-    padding: 15px;
-  }
-  #chat-header {
-    background: ${primaryColor};
-    color: white;
-    font-size: 16px;
-    padding: 10px;
-    border-radius: 10px 10px 0 0;
-    text-align: center;
-    position: relative;
-  }
-  #close-chat {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    transform: translateY(-50%);
-    cursor: pointer;
-  }
-  #text-bubble {
-    background-color: #f2f4f7;
-    padding: 10px;
-    margin: 15px 0;
-    border-radius: 1rem;
-    font-size: 14px;
-    color: #111828;
-    text-align: center;
-  }
-  #chat-form {
-    border: 2px solid ${primaryColor};
-    border-radius: 10px;
-    padding: 20px;
-    margin: 10px 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    overflow-y: auto;
-  }
-  #chat-form input, #chat-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px;
-  }
-  #chat-form button {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    background-color: ${primaryColor};
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  #chat-form button:hover {
-    background-color: ${secondaryColor};
-  }
-`;
-document.head.appendChild(style);
-
-// Attach functionality to the chat widget
-const chatBubble = document.getElementById('chat-bubble');
-const chatFormContainer = document.getElementById('chat-form-container');
-const closeChat = document.getElementById('close-chat');
-const chatForm = document.getElementById('chat-form');
-const textBubble = document.getElementById('text-bubble');
-const confirmationBubble = document.getElementById('confirmation-bubble');
-
-// Toggle chat form when bubble is clicked
-chatBubble.addEventListener('click', () => {
-  chatFormContainer.style.display = (chatFormContainer.style.display === 'flex') ? 'none' : 'block';
+// Toggle chat form visibility
+document.getElementById('chat-bubble').addEventListener('click', function () {
+  const formContainer = document.getElementById('chat-form-container');
+  formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
 });
 
-// Close chat form when close button is clicked
-closeChat.addEventListener('click', () => {
-  chatFormContainer.style.display = 'none';
+// Close chat form
+document.getElementById('close-chat').addEventListener('click', function () {
+  document.getElementById('chat-form-container').style.display = 'none';
 });
-
-// Handle form submission
-chatForm.addEventListener('submit', function (e) {
-  e.preventDefault();
-  const submitButton = chatForm.querySelector('button[type="submit"]');
-  submitButton.disabled = true;
-  submitButton.textContent = 'Sending...';
-
-  const formData = {
-    name: document.getElementById('name').value.trim(),
-    email: document.getElementById('email').value.trim(),
-    phone: document.getElementById('phone').value.trim(),
-    message: document.getElementById('message').value.trim(),
-    identifier: document.getElementById('identifier').value
-  };
-
-  fetch('https://api.visquanta.com/webhook/chat-widget', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(formData),
-  })
-  .then(response => {
-    if (!response.ok) throw new Error('Server error');
-    return response.json();
-  })
-  .then(() => {
-    chatForm.reset();
-    chatForm.style.display = 'none';
-    textBubble.style.display = 'none';
-    confirmationBubble.style.display = 'block';
-    chatHeader.textContent = 'All Done! 🏆';
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-    submitButton.disabled = false;
-    submitButton.textContent = 'Send Message 👍🏼';
-    confirmationBubble.style.display = 'block';
-    confirmationBubble.textContent = 'There was an error submitting the form. Please try again later.';
-  });
-});
-
-
