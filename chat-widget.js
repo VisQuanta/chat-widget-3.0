@@ -1,15 +1,73 @@
 document.addEventListener("DOMContentLoaded", function () {
   const chatBubble = document.getElementById('chat-bubble');
   const chatFormContainer = document.getElementById('chat-form-container');
-  const closeChat = document.getElementById('close-chat');
-  const chatForm = document.getElementById('chat-form');
-  const textBubble = document.getElementById('text-bubble');
-  const confirmationBubble = document.getElementById('confirmation-bubble');
-  const chatHeader = document.getElementById('chat-header');
+  const closeChat = document.createElement('button');
+  const chatForm = document.createElement('form');
+  const textBubble = document.createElement('div');
+  const confirmationBubble = document.createElement('div');
+  const chatHeader = document.createElement('div');
 
-  // Show chat form when bubble is clicked
+  // Create Header
+  chatHeader.id = 'chat-header';
+  chatHeader.textContent = 'How Can We Help You?';
+  closeChat.id = 'close-chat';
+  closeChat.innerHTML = '&times;';
+  closeChat.style.background = 'none';
+  closeChat.style.border = 'none';
+  closeChat.style.color = 'white';
+  closeChat.style.fontSize = '20px';
+  closeChat.style.position = 'absolute';
+  closeChat.style.top = '10px';
+  closeChat.style.right = '10px';
+  closeChat.style.cursor = 'pointer';
+  chatHeader.appendChild(closeChat);
+  chatFormContainer.appendChild(chatHeader);
+
+  // Create Initial Text Bubble
+  textBubble.id = 'text-bubble';
+  textBubble.textContent = 'Enter your info below and any information regarding your vehicle choice, and a representative will be right with you.';
+  chatFormContainer.appendChild(textBubble);
+
+  // Create Form Elements
+  chatForm.id = 'chat-form';
+  chatForm.innerHTML = `
+    <input type="text" id="name" name="name" placeholder="Your Name" required>
+    <input type="email" id="email" name="email" placeholder="Your Email" required>
+    <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" required pattern="^\\+?[1-9]\\d{1,14}$" title="Please enter a valid phone number.">
+    <input type="hidden" id="identifier" name="identifier" value="999999999999999999999999">
+    <textarea id="message" name="message" placeholder="Your Message or Vehicle Choice" required style="height: 100px;"></textarea>
+    <button type="submit">Send Message 👉🏼</button>
+    <div id="form-footer">By submitting, you agree to receive SMS or emails. Rates may apply.</div>
+  `;
+  chatFormContainer.appendChild(chatForm);
+
+  // Create Confirmation Bubble
+  confirmationBubble.id = 'confirmation-bubble';
+  confirmationBubble.textContent = 'Thanks for your enquiry. One of our authorized representatives will be in touch any minute now. 🏎️';
+  confirmationBubble.style.display = 'none';
+  chatFormContainer.appendChild(confirmationBubble);
+
+  // Powered By Footer
+  const poweredBy = document.createElement('div');
+  poweredBy.id = 'powered-by';
+  poweredBy.innerHTML = 'Powered by <a href="https://visquanta.com/speed-to-lead" target="_blank">VisQuanta</a>';
+  chatFormContainer.appendChild(poweredBy);
+
+  // Style Elements
+  chatFormContainer.style.display = 'none';
+  chatFormContainer.style.position = 'fixed';
+  chatFormContainer.style.bottom = '100px';
+  chatFormContainer.style.right = '20px';
+  chatFormContainer.style.width = '300px';
+  chatFormContainer.style.height = '600px';
+  chatFormContainer.style.backgroundColor = 'white';
+  chatFormContainer.style.borderRadius = '10px';
+  chatFormContainer.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+  chatFormContainer.style.zIndex = '1000';
+
+  // Toggle chat form when bubble is clicked
   chatBubble.addEventListener('click', () => {
-    chatFormContainer.style.display = 'flex';
+    chatFormContainer.style.display = chatFormContainer.style.display === 'flex' ? 'none' : 'flex';
   });
 
   // Close chat form when close button is clicked
@@ -71,5 +129,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
-
-
