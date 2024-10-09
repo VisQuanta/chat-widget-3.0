@@ -24,7 +24,7 @@
     const primaryColor = scriptTag.getAttribute('data-primary-color') || '#bb162b';
     const secondaryColor = scriptTag.getAttribute('data-secondary-color') || '#d24c60';
     const clientName = scriptTag.getAttribute('data-client-name') || 'Your Company';
-    const identifier = scriptTag.getAttribute('data-identifier') || 'default123';
+    const identifier = scriptTag.getAttribute('data-identifier') || 'default123'; // Keep default value
 
     const chatBubble = document.createElement('div');
     chatBubble.id = 'chat-bubble';
@@ -131,7 +131,7 @@
         email: document.getElementById('email').value.trim(),
         phone: document.getElementById('phone').value.trim(),
         message: document.getElementById('message').value.trim(),
-        identifier: identifier
+        identifier: identifier // Keeps default of 'default123'
       };
 
       fetch('https://api.visquanta.com/webhook/chat-widget', {
