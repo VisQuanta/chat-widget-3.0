@@ -24,12 +24,7 @@
     const primaryColor = scriptTag.getAttribute('data-primary-color') || '#bb162b';
     const secondaryColor = scriptTag.getAttribute('data-secondary-color') || '#d24c60';
     const clientName = scriptTag.getAttribute('data-client-name') || 'Your Company';
-    const identifier = scriptTag.getAttribute('data-identifier'); // Removed the default 'default123'
-
-    if (!identifier) {
-      console.error('Identifier is missing!');
-      return;
-    }
+    const identifier = scriptTag.getAttribute('data-identifier') || 'default123';
 
     const chatBubble = document.createElement('div');
     chatBubble.id = 'chat-bubble';
