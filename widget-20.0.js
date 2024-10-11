@@ -24,8 +24,9 @@
     const primaryColor = scriptTag.getAttribute('data-primary-color') || '#bb162b';
     const secondaryColor = scriptTag.getAttribute('data-secondary-color') || '#d24c60';
     const clientName = scriptTag.getAttribute('data-client-name') || 'Your Company';
-    const identifier = scriptTag.getAttribute('data-identifier') || 'default123'; // Keep default value
+    const identifier = scriptTag.getAttribute('data-identifier') || 'default123';
 
+    // Chat Bubble Creation
     const chatBubble = document.createElement('div');
     chatBubble.id = 'chat-bubble';
     chatBubble.style.cssText = `
@@ -46,11 +47,34 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       z-index: 1000;
       transition: transform 0.3s ease, background-color 0.3s ease;
+      opacity: 0; /* Initially hidden */
     `;
     chatBubble.innerHTML = '💬';
-
     document.body.appendChild(chatBubble);
 
+    // Speech Bubble Creation with Font Family (Helvetica)
+    const chatBubbleSpeech = document.createElement('div');
+    chatBubbleSpeech.id = 'chat-bubble-speech';
+    chatBubbleSpeech.style.cssText = `
+      position: fixed;
+      bottom: 72px;
+      right: 77px;
+      background-color: #f2f4f7;
+      padding: 20px 15px;
+      border-radius: 0.5rem 0.5rem 0rem 0.5rem;
+      font-size: 14px;
+      color: #111828;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      white-space: nowrap;
+      font-family: 'Helvetica', 'Arial', sans-serif; /* Ensures Helvetica font */
+      opacity: 0;
+      display: none;
+    `;
+    chatBubbleSpeech.innerHTML = "Let's chat! Get all of your questions answered.";
+    document.body.appendChild(chatBubbleSpeech);
+
+    // Form Container Creation
     const chatFormContainer = document.createElement('div');
     chatFormContainer.id = 'chat-form-container';
     chatFormContainer.style.cssText = `
@@ -70,12 +94,13 @@
     `;
     document.body.appendChild(chatFormContainer);
 
+    // Form Content Creation
     chatFormContainer.innerHTML = `
       <div id="chat-header" style="background: linear-gradient(to right, ${primaryColor}, ${secondaryColor}); color: white; font-size: 16px; padding: 17px 12px; border-radius: 10px 10px 0 0; text-align: center; position: relative;">
         How Can We Help You?
         <button id="close-chat" style="background: none; border: none; color: white; font-size: 20px; font-weight: bold; position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;">&times;</button>
       </div>
-      <div id="text-bubble" style="background-color: #f2f4f7; padding: 15px; margin: 15px 20px; border-radius: 0 2rem 2rem 2rem; font-size: 14px; color: #111828; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+      <div id="text-bubble" style="background-color: #f2f4f7; padding: 15px; margin: 15px 20px; border-radius: 0 1rem 1rem 1rem; font-size: 14px; color: #111828; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         Enter your info below and any information regarding your vehicle choice, and a representative will be right with you.
       </div>
       <form id="chat-form" style="border: 2px solid; border-image: linear-gradient(to right, ${primaryColor}, ${secondaryColor}) 1; padding: 10px; border-radius: 10px; margin: 15px; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box;">
@@ -88,7 +113,7 @@
       <div id="form-footer" style="font-size: 12px; text-align: center; padding: 8px; color: #555;">
         By submitting, you agree to receive SMS or emails. Rates may apply.
       </div>
-      <div id="confirmation-bubble" style="display: none; background-color: #f2f4f7; padding: 15px; margin: 10px 20px; border-radius: 0 2rem 2rem 2rem; font-size: 14px; color: #111828; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+      <div id="confirmation-bubble" style="display: none; background-color: #f2f4f7; padding: 15px; margin: 10px 20px; border-radius: 0 1rem 1rem 1rem; font-size: 14px; color: #111828; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         Thanks for your enquiry. One of our authorized representatives will be in touch any minute now. 🏎️
       </div>
       <div id="powered-by" style="font-size: 12px; text-align: center; margin-top: auto; padding-bottom: 10px;">
@@ -96,20 +121,24 @@
       </div>
     `;
 
-    chatBubble.addEventListener('mouseenter', () => {
-      chatBubble.style.transform = 'scale(1.1)';
-      chatBubble.style.backgroundColor = secondaryColor;
-    });
+    // Fade-in effect for chat bubble and speech bubble after 3 seconds
+    setTimeout(() => {
+      chatBubble.style.opacity = '1';
+      chatBubbleSpeech.style.opacity = '1';
+      chatBubbleSpeech.style.display = 'block';
+      chatBubble.style.transition = 'opacity 1s ease';
+      chatBubbleSpeech.style.transition = 'opacity 1s ease';
+    }, 3000);
 
-    chatBubble.addEventListener('mouseleave', () => {
-      chatBubble.style.transform = 'scale(1)';
-      chatBubble.style.backgroundColor = primaryColor;
-    });
-
-    chatBubble.addEventListener('click', () => {
+    const openChatForm = () => {
       chatFormContainer.style.display = chatFormContainer.style.display === 'flex' ? 'none' : 'flex';
       chatFormContainer.style.flexDirection = 'column';
-    });
+      chatBubbleSpeech.style.display = 'none'; // Hide speech bubble when clicked
+    };
+
+    // Open form when chat bubble or speech bubble is clicked
+    chatBubble.addEventListener('click', openChatForm);
+    chatBubbleSpeech.addEventListener('click', openChatForm); // Open form on speech bubble click
 
     document.getElementById('close-chat').addEventListener('click', () => {
       chatFormContainer.style.display = 'none';
@@ -131,7 +160,7 @@
         email: document.getElementById('email').value.trim(),
         phone: document.getElementById('phone').value.trim(),
         message: document.getElementById('message').value.trim(),
-        identifier: identifier // Keeps default of 'default123'
+        identifier: identifier,
       };
 
       fetch('https://api.visquanta.com/webhook/chat-widget', {
@@ -141,24 +170,24 @@
         },
         body: JSON.stringify(formData),
       })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        document.getElementById('chat-form').style.display = 'none';
-        document.getElementById('text-bubble').style.display = 'none';
-        document.getElementById('form-footer').style.display = 'none';
-        document.getElementById('confirmation-bubble').style.display = 'block';
-        document.getElementById('chat-header').textContent = 'All Done! 🏆';
-      })
-      .catch(error => {
-        alert('There was an issue submitting the form. Please try again.');
-        submitButton.disabled = false;
-        submitButton.textContent = 'Send Message 👉🏼';
-      });
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          document.getElementById('chat-form').style.display = 'none';
+          document.getElementById('text-bubble').style.display = 'none';
+          document.getElementById('form-footer').style.display = 'none';
+          document.getElementById('confirmation-bubble').style.display = 'block';
+          document.getElementById('chat-header').textContent = 'All Done! 🏆';
+        })
+        .catch((error) => {
+          alert('There was an issue submitting the form. Please try again.');
+          submitButton.disabled = false;
+          submitButton.textContent = 'Send Message 👉🏼';
+        });
     });
 
     const sendButton = document.getElementById('submit-btn');
