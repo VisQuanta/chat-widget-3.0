@@ -3,7 +3,7 @@
     document.addEventListener('DOMContentLoaded', initWidget);
   } else {
     initWidget();
-  }
+  } 
 
   function initWidget() {
     const scriptTags = document.getElementsByTagName('script');
