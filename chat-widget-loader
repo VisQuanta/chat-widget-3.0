@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GHL Chat Widget Loader</title>
+  <script>
+    // Function to load the widget dynamically
+    function loadChatWidget(widgetId, locationId) {
+      const widgetDiv = document.createElement('div');
+      widgetDiv.setAttribute('data-chat-widget', '');
+      widgetDiv.setAttribute('data-widget-id', widgetId);
+      widgetDiv.setAttribute('data-location-id', locationId);
+      document.body.appendChild(widgetDiv);
+
+      const script = document.createElement('script');
+      script.src = "https://widgets.leadconnectorhq.com/loader.js";
+      script.setAttribute('data-resources-url', "https://widgets.leadconnectorhq.com/chat-widget/loader.js");
+      script.setAttribute('data-widget-id', widgetId);
+      document.body.appendChild(script);
+    }
+
+    // Replace these variables with the desired widget and location IDs
+    const widgetId = "your-widget-id-here";
+    const locationId = "your-location-id-here";
+
+    // Call the function to load the widget
+    document.addEventListener('DOMContentLoaded', () => {
+      loadChatWidget(widgetId, locationId);
+    });
+  </script>
+</head>
+<body>
+  <h1>Loading Chat Widget...</h1>
+</body>
+</html>
