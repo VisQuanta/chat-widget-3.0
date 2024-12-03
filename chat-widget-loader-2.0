@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Widget Loader</title>
+</head>
+<body>
+  <div 
+    data-chat-widget 
+    data-widget-id="674f616bd5a43d072f64c1d8" 
+    data-location-id="aBPYZ8JTIdQ8YpXdxdtO">
+  </div>
+  <script 
+    src="https://widgets.leadconnectorhq.com/loader.js"  
+    data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" 
+    data-widget-id="674f616bd5a43d072f64c1d8">
+  </script>
+</body>
+</html>
